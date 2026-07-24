@@ -1,27 +1,20 @@
-import tabfm
 import joblib
+import tabfm
 from app.database.mongodb import models_collection
+
 
 def load_trained_model(model_path: str):
 
     model = joblib.load(model_path)
+    return model 
 
-    return model
 
-async def predict_model(
+async def predict_proba_model(
     X,
     model_id: str
 ):
-    """
-    Later this function will:
 
-    1. Find model using model_id
-    2. Load trained model
-    3. Predict
-    """
-
-
-    # find model from model_id 
+    # find model metadata
     model_record = await models_collection.find_one(
         {
             "model_id": model_id
@@ -33,24 +26,23 @@ async def predict_model(
             f"Model not found: {model_id}"
         )
 
-    model_path = model_record["model_path"]
-    print ("MODEL PATH AT : ", model_path)
 
-    # Load trained model
-    trainedModel = load_trained_model(
+    model_path = model_record["model_path"]
+
+
+    # load fitted model
+    trained_model = load_trained_model(
         model_path
     )
 
-    print ("TRAINED MODEL : ", trainedModel)
-    #
-    # Predict
-    predictions = trainedModel.predict(X)
 
-    print ("PREDICTION : ", predictions)
+    # probability prediction
+    probabilities = trained_model.predict_proba(X)
+
 
     return {
         "status": "success",
         "model_id": model_id,
         "rows": len(X),
-        "predictions": predictions.tolist()
+        "probabilities": probabilities.tolist()
     }
