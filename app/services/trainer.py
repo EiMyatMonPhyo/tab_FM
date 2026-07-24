@@ -2,6 +2,7 @@ import os
 from pathlib import Path
 import joblib
 import tabfm
+import torch
 
 from app.services.model_storage import save_model_record
 
