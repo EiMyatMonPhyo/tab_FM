@@ -30,7 +30,7 @@ async def train_model(
 
     # Load TabFM model
     if task_type == "classification":
-        model = tabfm_v1_0_0_pytorch.(
+        model = tabfm_v1_0_0_pytorch.load(
             model_type="classification",
             device=torch.device("cuda" if torch.cuda.is_available() else "cpu"),
             dtype=torch.bfloat16
@@ -38,7 +38,7 @@ async def train_model(
         tabFmModel = tabfm.TabFMClassifier(model=model)
 
     elif task_type == "regression":
-        model = tabfm_v1_0_0_pytorch.(
+        model = tabfm_v1_0_0_pytorch.load(
             model_type="regression",
             device=torch.device("cuda" if torch.cuda.is_available() else "cpu"),
             dtype=torch.bfloat16
