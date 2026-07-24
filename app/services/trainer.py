@@ -2,7 +2,7 @@ import os
 from pathlib import Path
 import joblib
 import tabfm
-from tabfm.src.pytorch import tabfm_v1_0_0_pytorch
+from tabfm import tabfm_v1_0_0_pytorch
 
 from app.services.model_storage import save_model_record
 
