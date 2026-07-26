@@ -2,7 +2,7 @@ from fastapi import APIRouter, UploadFile, File, Form, HTTPException
 import pandas as pd
 
 from app.services.predictor_proba import predict_proba_model
-from app.services.model_id import generate_model_id
+from app.services.model_id_generator import generate_model_id
 
 
 router = APIRouter(
