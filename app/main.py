@@ -159,7 +159,7 @@ async def serve_client_page():
                 formData.append('file', document.getElementById('probaCsvFile').files[0]);
 
                 handleTaskSubmission({
-                    endpoint: '/predict_proba',
+                    endpoint: '/predict_proba/',
                     formData: formData,
                     statusDiv: document.getElementById('probaStatus'),
                     outputPre: document.getElementById('probaOutput'),
