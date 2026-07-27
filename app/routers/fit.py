@@ -1,4 +1,4 @@
-from fastapi import APIRouter, UploadFile, File, Form, HTTPException
+from fastapi import APIRouter, UploadFile, File, Form, HTTPException, BackgroundTasks
 import pandas as pd
 
 from app.services.trainer import train_model    
@@ -12,6 +12,7 @@ router = APIRouter(
 
 @router.post("/")
 async def fit(
+    background_tasks: BackgroundTasks,
     file: UploadFile = File(...),
     user_id: str = Form(...),
     task_type: str = Form(...)
@@ -47,7 +48,8 @@ async def fit(
         task_type=task_type,
         file_name=file.filename,
         model_id=model_id,
-        user_id= user_id
+        user_id= user_id,
+        background_tasks=background_tasks
     )
 
     return result

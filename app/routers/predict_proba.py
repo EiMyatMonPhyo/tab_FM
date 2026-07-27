@@ -1,4 +1,4 @@
-from fastapi import APIRouter, UploadFile, File, Form, HTTPException
+from fastapi import APIRouter, UploadFile, File, Form, HTTPException, BackgroundTasks
 import pandas as pd
 
 from app.services.predictor_proba import predict_proba_model
@@ -13,6 +13,7 @@ router = APIRouter(
 
 @router.post("/")
 async def predict_proba(
+    background_tasks: BackgroundTasks,
     file: UploadFile = File(...),
     user_id: str = Form(...)
 ):
@@ -34,7 +35,8 @@ async def predict_proba(
 
     result = await predict_proba_model(
         X=df,
-        model_id=model_id
+        model_id=model_id,
+        background_tasks=background_tasks
     )
 
     return result

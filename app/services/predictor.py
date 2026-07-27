@@ -3,6 +3,7 @@ import joblib
 from typing import Any
 from fastapi import BackgroundTasks
 import asyncio
+import torch
 
 from app.services.task_storage import save_task_record, get_task_record, update_task_record_sync
 from app.database.mongodb import models_collection
@@ -12,14 +13,13 @@ def load_trained_model(model_path: str):
     model = joblib.load(model_path)
 
     return model
+
 def _heavy_predict_worker(
     task_id: str,
     X: Any,
     model_record: dict
 ):
-    """
-    Synchronous CPU-bound worker receiving the resolved model_record dict.
-    """
+    
     try:
         update_task_record_sync(
             task_id=task_id,
@@ -32,6 +32,23 @@ def _heavy_predict_worker(
 
         trainedModel = load_trained_model(model_path)
         print("TRAINED MODEL : ", trainedModel)
+
+        ##############################
+        cuda_available = torch.cuda.is_available()
+        device_name = torch.cuda.get_device_name(0) if cuda_available else "CPU"
+        
+        print("=" * 50)
+        print(f" PyTorch CUDA Available : {cuda_available}")
+        print(f" Execution Device       : {device_name}")
+        
+        # If TabFM/PyTorch model has a .device attribute or parameters:
+        if hasattr(trainedModel, "device"):
+            print(f" Model Device           : {trainedModel.device}")
+        elif hasattr(trainedModel, "model") and hasattr(trainedModel.model, "device"):
+            print(f" Model Device           : {trainedModel.model.device}")
+        print("=" * 50)
+        ##############################
+
 
         predictions = trainedModel.predict(X)
         print("PREDICTION : ", predictions)
@@ -150,60 +167,3 @@ async def get_predict_status(task_id: str):
         "message": "Prediction is still running..."
     }
 
-
-# import tabfm
-# import joblib
-# from app.database.mongodb import models_collection
-
-# def load_trained_model(model_path: str):
-
-#     model = joblib.load(model_path)
-
-#     return model
-
-# async def predict_model(
-#     X,
-#     model_id: str
-# ):
-#     """
-#     This function will:
-
-#     1. Find model using model_id
-#     2. Load trained model
-#     3. Predict
-#     """
-
-
-#     # find model from model_id 
-#     model_record = await models_collection.find_one(
-#         {
-#             "model_id": model_id
-#         }
-#     )
-
-#     if not model_record:
-#         raise ValueError(
-#             f"Model not found: {model_id}"
-#         )
-
-#     model_path = model_record["model_path"]
-#     print ("MODEL PATH AT : ", model_path)
-
-#     # Load trained model
-#     trainedModel = load_trained_model(
-#         model_path
-#     )
-
-#     print ("TRAINED MODEL : ", trainedModel)
-#     #
-#     # Predict
-#     predictions = trainedModel.predict(X)
-
-#     print ("PREDICTION : ", predictions)
-
-#     return {
-#         "status": "success",
-#         "model_id": model_id,
-#         "rows": len(X),
-#         "predictions": predictions.tolist()
-#     }

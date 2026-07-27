@@ -3,7 +3,7 @@ from datetime import datetime
 from app.database.mongodb import models_collection
 
 
-async def save_model_record(
+def save_model_record(
     model_id: str,
     user_id: str,
     filename: str,
@@ -20,7 +20,7 @@ async def save_model_record(
         "created_at": datetime.utcnow()
     }
 
-    await models_collection.insert_one(document)
+    models_collection.insert_one(document)
 
 
 
