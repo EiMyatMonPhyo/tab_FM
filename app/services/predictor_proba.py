@@ -1,7 +1,7 @@
 import joblib
 import tabfm
 from app.database.mongodb import models_collection
-
+from fastapi import HTTPException
 
 def load_trained_model(model_path: str):
 
@@ -26,6 +26,11 @@ async def predict_proba_model(
             f"Model not found: {model_id}"
         )
 
+    if model_record["task_type"] == "regression" or model_record["task_type"] != "classification":
+        raise HTTPException(
+            status_code=400,
+            detail="predict_proba is only available for classification models."
+        )
 
     model_path = model_record["model_path"]
 

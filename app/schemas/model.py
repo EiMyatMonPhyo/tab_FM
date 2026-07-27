@@ -9,3 +9,4 @@ class ModelRecord(BaseModel):
     model_path: str
     task_type: str
     created_at: datetime
+
