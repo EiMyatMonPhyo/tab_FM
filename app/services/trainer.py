@@ -75,7 +75,8 @@ def _heavy_fit_worker(
 
         joblib.dump(
             tabFmModel,
-            model_path
+            model_path,
+            compress = 3
         )
 
         save_model_record(
