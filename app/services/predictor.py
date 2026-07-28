@@ -164,6 +164,6 @@ async def get_predict_status(task_id: str):
     return {
         "task_id": task_id,
         "status": status,
-        "message": "Prediction is still running..."
+        "message": "Still running..."
     }
 
