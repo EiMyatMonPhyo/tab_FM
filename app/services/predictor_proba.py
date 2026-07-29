@@ -94,6 +94,29 @@ async def _run_predict_proba_background(
                 error="predict_proba is only available for classification models."
             )
             return
+        
+        # X test should contain all the columns in X train
+        # Check input columns
+        train_columns = model_record.get("column_names", [])        # train X
+        test_columns = X.columns.tolist()           # test X
+
+        print ("train_columns: ", train_columns )
+        print ("test_columns: ", test_columns )
+
+        missing_columns = [
+            col for col in train_columns
+            if col not in test_columns
+        ]
+
+        if missing_columns:
+            update_task_record_sync(
+                task_id=task_id,
+                status="failed",
+                error=(
+                    f"Missing required columns: {missing_columns}"
+                )
+            )
+            return
 
         await asyncio.to_thread(_heavy_predict_proba_worker, task_id, X, model_record)
 

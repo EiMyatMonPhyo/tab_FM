@@ -66,6 +66,8 @@ def _heavy_fit_worker(
             print(f" Model Device           : {tabFmModel.model.device}")
         print("=" * 50)
         ##############################
+        column_names = X.columns.tolist()
+        print ("X Train data: ", column_names)
         # Train model
         tabFmModel.fit(X, y)
 
@@ -73,27 +75,36 @@ def _heavy_fit_worker(
         model_filename = f"{model_id}.joblib"
         model_path = MODEL_DIR / model_filename
 
+        print ("Saving Model")
         joblib.dump(
             tabFmModel,
             model_path,
             compress = 3
         )
 
+        print ("Saving data to Database")
         save_model_record(
             model_id=model_id,
             user_id=user_id,
             filename=file_name,
             model_path=str(model_path),
-            task_type=task_type
+            task_type=task_type,
+            column_names=column_names,
+            num_columns= len(column_names),
+            num_rows= len(X)
         )
 
+        print ("Done Training")
         result_payload = {
             "status": "success",
             "model_id": model_id,
             "model_path": str(model_path),
             "task_type": task_type,
             "file_name": file_name,
-            "rows": len(X)
+            "rows": len(X),
+            "column_names"=column_names,
+            "num_columns"= len(column_names),
+            "num_rows"= len(X)
         }
 
         update_task_record_sync(

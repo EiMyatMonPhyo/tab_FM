@@ -17,13 +17,17 @@ async def predict(
     user_id: str = Form(...)
 ):
 
-    if not file.filename.endswith(".csv"):
+    if not (file.filename.endswith(".csv") or file.filename.endswith(".xlsx")):
         raise HTTPException(
             status_code=400,
-            detail="Only CSV files are supported."
+            detail="Only CSV and XLSX files are supported."
         )
 
-    df = pd.read_csv(file.file)
+    if file.filename.endswith(".csv"):
+        df = pd.read_csv(file.file)
+
+    elif file.filename.endswith(".xlsx"):
+        df = pd.read_excel(file.file)
 
     # model_id to be used
     model_id = generate_model_id(

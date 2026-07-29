@@ -8,7 +8,10 @@ def save_model_record(
     user_id: str,
     filename: str,
     model_path: str,
-    task_type: str
+    task_type: str,
+    column_names: list[str],
+    num_columns: int,
+    num_rows: int
 ):
 
     document = {
@@ -17,6 +20,9 @@ def save_model_record(
         "filename": filename,
         "model_path": model_path,
         "task_type": task_type,
+        "column_names": column_names,
+        "num_columns": num_columns,
+        "num_rows": num_rows,
         "created_at": datetime.utcnow()
     }
 

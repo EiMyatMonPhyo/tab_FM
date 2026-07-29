@@ -7,6 +7,9 @@ class ModelRecord(BaseModel):
     user_id: str
     filename: str
     model_path: str
-    task_type: str
+    task_type: str,
+    column_names: list[str],
+    num_columns: int,
+    num_rows: int
     created_at: datetime
 

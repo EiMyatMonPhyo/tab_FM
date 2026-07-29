@@ -23,17 +23,41 @@ async def fit(
         - regression
     """
 
-    if not file.filename.endswith(".csv"):
+    if not (file.filename.endswith(".csv") or file.filename.endswith(".xlsx")):
         raise HTTPException(
             status_code=400,
-            detail="Only CSV files are supported."
+            detail="Only CSV and XLSX files are supported."
         )
 
-    # read file and convert to df
-    df = pd.read_csv(file.file)
+    if file.filename.endswith(".csv"):
+        df = pd.read_csv(file.file)
+
+    elif file.filename.endswith(".xlsx"):
+        df = pd.read_excel(file.file)
+
+    if df.empty:
+        raise HTTPException(
+            status_code=400,
+            detail="File is empty."
+        )
 
     X = df.iloc[:, :-1]
     y = df.iloc[:, -1]
+
+    if task_type == "regression":
+        # the last column should not contain null
+        if y.isnull().any():
+            raise HTTPException(
+                status_code=400,
+                detail="The last column contains null values."
+            )
+
+        # the last column should contain numeric type only
+        if not is_numeric_dtype(y):
+            raise HTTPException(
+                status_code=400,
+                detail="The last column must contain numeric values for regression."
+            )
 
     # generate model_id
     model_id = generate_model_id(
