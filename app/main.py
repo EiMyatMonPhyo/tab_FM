@@ -71,7 +71,7 @@ async def serve_client_page():
             <h2>3. Predict Proba (/predict/proba)</h2>
             <form id="probaForm">
                 <label>User ID: <input type="text" id="probaUserId" value="user_123" required></label>
-                <label>CSV File (Classification only): <input type="file" id="probaCsvFile" accept=".csv" required></label>
+                <label>CSV File (Classification only): <input type="file" id="probaCsvFile" accept=".csv,.xlsx" required></label>
                 <button type="submit">Start Predict Proba</button>
             </form>
             <div id="probaStatus" class="status"></div>
