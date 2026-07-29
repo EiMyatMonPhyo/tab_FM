@@ -38,7 +38,7 @@ async def serve_client_page():
 
         <!-- 1. FIT CARD -->
         <div class="card">
-            <h2>1. Fit / Train Model (/fit/)</h2>
+            <h2> Training Data </h2>
             <form id="fitForm">
                 <label>User ID: <input type="text" id="fitUserId" value="user_123" required></label>
                 <label>Task Type: 
@@ -56,7 +56,7 @@ async def serve_client_page():
 
         <!-- 2. PREDICT CARD -->
         <div class="card">
-            <h2>2. Predict (/predict/)</h2>
+            <h2> Predicting Data </h2>
             <form id="predictForm">
                 <label>User ID: <input type="text" id="predictUserId" value="user_123" required></label>
                 <label>CSV File: <input type="file" id="predictCsvFile" accept=".csv,.xlsx" required></label>
@@ -68,7 +68,7 @@ async def serve_client_page():
 
         <!-- 3. PREDICT PROBA CARD -->
         <div class="card">
-            <h2>3. Predict Proba (/predict/proba)</h2>
+            <h2> Predicting Probability </h2>
             <form id="probaForm">
                 <label>User ID: <input type="text" id="probaUserId" value="user_123" required></label>
                 <label>CSV File (Classification only): <input type="file" id="probaCsvFile" accept=".csv,.xlsx" required></label>

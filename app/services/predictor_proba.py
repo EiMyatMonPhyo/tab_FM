@@ -88,6 +88,8 @@ async def _run_predict_proba_background(
             return
 
         if model_record.get("task_type") == "regression" or model_record.get("task_type") != "classification":
+            print ("task type : ", model_record.get("task_type"))
+            print ("regression is not supported for classification model")
             update_task_record_sync(
                 task_id=task_id,
                 status="failed",
