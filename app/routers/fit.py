@@ -1,6 +1,6 @@
 from fastapi import APIRouter, UploadFile, File, Form, HTTPException, BackgroundTasks
 import pandas as pd
-
+from pandas.api.types import is_numeric_dtype
 from app.services.trainer import train_model    
 from app.services.model_id_generator import generate_model_id
 
