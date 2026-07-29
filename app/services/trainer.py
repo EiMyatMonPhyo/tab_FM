@@ -102,9 +102,9 @@ def _heavy_fit_worker(
             "task_type": task_type,
             "file_name": file_name,
             "rows": len(X),
-            "column_names"=column_names,
-            "num_columns"= len(column_names),
-            "num_rows"= len(X)
+            "column_names":column_names,
+            "num_columns": len(column_names),
+            "num_rows": len(X)
         }
 
         update_task_record_sync(
