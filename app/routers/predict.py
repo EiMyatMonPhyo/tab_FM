@@ -32,7 +32,8 @@ async def predict(
     # model_id to be used
     model_id = generate_model_id(
         user_id=user_id,
-        filename=file.filename
+        filename=file.filename,
+        method= "test"
     )
 
     result = await predict_model(

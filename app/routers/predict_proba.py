@@ -32,7 +32,8 @@ async def predict_proba(
     # generate same model id used in fit
     model_id = generate_model_id(
         user_id=user_id,
-        filename=file.filename
+        filename=file.filename,
+        method= "test"
     )
 
 

@@ -62,7 +62,8 @@ async def fit(
     # generate model_id
     model_id = generate_model_id(
         user_id=user_id,
-        filename=file.filename
+        filename=file.filename,
+        method= "train"
     )
 
 
