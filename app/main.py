@@ -47,7 +47,7 @@ async def serve_client_page():
                         <option value="regression">Regression</option>
                     </select>
                 </label>
-                <label>Training CSV File (Target column must be last): <input type="file" id="fitCsvFile" accept=".csv" required></label>
+                <label>Training CSV File (Target column must be last): <input type="file" id="fitCsvFile" accept=".csv,.xlsx" required></label>
                 <button type="submit">Start Training</button>
             </form>
             <div id="fitStatus" class="status"></div>
@@ -59,7 +59,7 @@ async def serve_client_page():
             <h2>2. Predict (/predict/)</h2>
             <form id="predictForm">
                 <label>User ID: <input type="text" id="predictUserId" value="user_123" required></label>
-                <label>CSV File: <input type="file" id="predictCsvFile" accept=".csv" required></label>
+                <label>CSV File: <input type="file" id="predictCsvFile" accept=".csv,.xlsx" required></label>
                 <button type="submit">Start Prediction</button>
             </form>
             <div id="predictStatus" class="status"></div>
