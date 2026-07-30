@@ -99,9 +99,14 @@ http://127.0.0.1:8000/docs
 
 | Endpoint               | Description                              |
 | ---------------------- | ---------------------------------------- |
-| POST `/fit/`           | Train a TabFM model                      |
-| POST `/predict/`       | Predict using a previously trained model |
+| POST `/train-data/`           | Train a TabFM model                      |
+| POST `/predict-data/`       | Predict using a previously trained model |
 | POST `/predict_proba/` | Return prediction probabilities          |
+
+---
+# Interactive Client
+
+The simple interactive client can be accessed via `/client`. It will call the corresponding endpoint, depending on the user input. As each endpoint's background process takes long, a separate endpoint `/check-status` is used to check the process every 5 seconds and return the corresponding results when the process is completed.
 
 ---
 
@@ -152,7 +157,7 @@ Both generate the same model ID:
 
 # Model Storage
 
-After a successful `/fit` request:
+After a successful `/train-data` request:
 
 * The trained TabFM model is saved under:
 
