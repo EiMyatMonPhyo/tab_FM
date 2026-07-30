@@ -6,7 +6,7 @@ from app.services.model_id_generator import generate_model_id
 
 
 router = APIRouter(
-    prefix="/predict_proba",
+    prefix="/predict-proba",
     tags=["predict Probability"]
 )
 

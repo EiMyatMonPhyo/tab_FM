@@ -3,7 +3,7 @@ from datetime import datetime
 from app.database.mongodb import models_collection
 
 
-def save_model_record(
+async def save_model_record(
     model_id: str,
     user_id: str,
     filename: str,
@@ -26,19 +26,19 @@ def save_model_record(
         "created_at": datetime.utcnow()
     }
 
-    models_collection.insert_one(document)
+    await models_collection.insert_one(document)
 
 
 
-def get_model_record(model_id: str):
+async def get_model_record(model_id: str):
 
-    return models_collection.find_one(
+    return await models_collection.find_one(
         {
             "model_id": model_id
         }
     )
 
-def update_model_record(
+async def update_model_record(
     model_id: str,
     user_id: str,
     filename: str,
@@ -49,7 +49,7 @@ def update_model_record(
     num_rows: int
 ):
 
-    models_collection.update_one(
+    await models_collection.update_one(
         {
             "model_id": model_id
         },

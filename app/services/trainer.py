@@ -82,38 +82,11 @@ def _heavy_train_worker(
             compress = 3
         )
 
-        print ("Saving data to Database")
-        existing_model = get_model_record(model_id)
-
-        if existing_model:
-            print ("Updating with ", task_type)
-            update_model_record(
-                model_id=model_id,
-                user_id=user_id,
-                filename=file_name,
-                model_path=str(model_path),
-                task_type=task_type,
-                column_names=column_names,
-                num_columns= len(column_names),
-                num_rows= len(X)
-            )
-        else:
-            print ("Saving with ", task_type)
-            save_model_record(
-                model_id=model_id,
-                user_id=user_id,
-                filename=file_name,
-                model_path=str(model_path),
-                task_type=task_type,
-                column_names=column_names,
-                num_columns= len(column_names),
-                num_rows= len(X)
-            )
-
         print ("Done Training")
         result_payload = {
             "status": "success",
             "model_id": model_id,
+            "user_id": user_id,
             "model_path": str(model_path),
             "task_type": task_type,
             "file_name": file_name,
@@ -128,6 +101,8 @@ def _heavy_train_worker(
             status="completed",
             result=result_payload
         )
+
+        return result_payload
 
     except Exception as e:
         print("TRAINING ERROR : ", str(e))
@@ -146,8 +121,9 @@ async def _run_train_background(
     model_id: str,
     user_id: str
 ):
+    
     try:
-        await asyncio.to_thread(
+        model_info = await asyncio.to_thread(
             _heavy_train_worker,
             task_id,
             X,
@@ -157,6 +133,34 @@ async def _run_train_background(
             model_id,
             user_id
         )
+        print ("Saving data to Database")
+        existing_model = await get_model_record(model_info["model_id"])
+
+        if existing_model:
+            print ("Updating with ", task_type)
+            await update_model_record(
+                model_id=model_info["model_id"],
+                user_id=model_info["user_id"],
+                filename=model_info["file_name"],
+                model_path=model_info["model_path"],
+                task_type=model_info["task_type"],
+                column_names= model_info["column_names"],
+                num_columns= model_info["num_columns"],
+                num_rows= model_info["num_rows"]
+            )
+        else:
+            print ("Saving with ", task_type)
+            await save_model_record(
+                model_id=model_info["model_id"],
+                user_id=model_info["user_id"],
+                filename=model_info["file_name"],
+                model_path=model_info["model_path"],
+                task_type=model_info["task_type"],
+                column_names= model_info["column_names"],
+                num_columns= model_info["num_columns"],
+                num_rows= model_info["num_rows"]
+            )
+
 
     except Exception as e:
         print("BACKGROUND TRAIN ERROR : ", str(e))

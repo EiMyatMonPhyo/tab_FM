@@ -39,7 +39,7 @@ async def serve_client_page():
 
         <!-- 1. TRAIN CARD -->
         <div class="card">
-            <h2> Training Data </h2>
+            <h2> Training </h2>
             <form id="fitForm">
                 <label>User ID: <input type="text" id="fitUserId" value="user_123" required></label>
                 <label>Task Type: 
@@ -160,7 +160,7 @@ async def serve_client_page():
                 formData.append('file', document.getElementById('probaCsvFile').files[0]);
 
                 handleTaskSubmission({
-                    endpoint: '/predict_proba/',
+                    endpoint: '/predict-proba/',
                     formData: formData,
                     statusDiv: document.getElementById('probaStatus'),
                     outputPre: document.getElementById('probaOutput'),
