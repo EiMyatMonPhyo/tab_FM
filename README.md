@@ -101,7 +101,7 @@ http://127.0.0.1:8000/docs
 | ---------------------- | ---------------------------------------- |
 | POST `/train-data/`           | Train a TabFM model                      |
 | POST `/predict-data/`       | Predict using a previously trained model |
-| POST `/predict_proba/` | Return prediction probabilities          |
+| POST `/predict-proba/` | Return prediction probabilities          |
 
 ---
 # Interactive Client
