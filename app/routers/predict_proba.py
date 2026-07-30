@@ -7,12 +7,12 @@ from app.services.model_id_generator import generate_model_id
 
 router = APIRouter(
     prefix="/predict_proba",
-    tags=["predict_proba"]
+    tags=["predict Probability"]
 )
 
 
 @router.post("/")
-async def predict_proba(
+async def predict_probability(
     background_tasks: BackgroundTasks,
     file: UploadFile = File(...),
     user_id: str = Form(...)
@@ -29,7 +29,7 @@ async def predict_proba(
     elif file.filename.endswith(".xlsx"):
         df = pd.read_excel(file.file)
 
-    # generate same model id used in fit
+    # generate same model id used in train-data
     model_id = generate_model_id(
         user_id=user_id,
         filename=file.filename,

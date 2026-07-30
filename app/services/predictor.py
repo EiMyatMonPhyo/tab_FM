@@ -5,7 +5,7 @@ from fastapi import BackgroundTasks
 import asyncio
 import torch
 
-from app.services.task_storage import save_task_record, get_task_record, update_task_record_sync
+from app.services.task_storage import save_task_record, update_task_record_sync
 from app.database.mongodb import models_collection
 
 def load_trained_model(model_path: str):
@@ -156,38 +156,5 @@ async def predict_model(
         "task_id": task_id,
         "status": "pending",
         "message": "Prediction task started."
-    }
-
-
-async def get_predict_status(task_id: str):
-
-    task_record = await get_task_record(task_id)
-
-    if not task_record:
-        return {
-            "status": "failed",
-            "error": f"Task ID not found: {task_id}"
-        }
-
-    status = task_record.get("status", "pending")
-
-    if status == "completed":
-        return {
-            "task_id": task_id,
-            "status": "completed",
-            "result": task_record.get("result")
-        }
-
-    elif status == "failed":
-        return {
-            "task_id": task_id,
-            "status": "failed",
-            "error": task_record.get("error")
-        }
-
-    return {
-        "task_id": task_id,
-        "status": status,
-        "message": "Still running..."
     }
 

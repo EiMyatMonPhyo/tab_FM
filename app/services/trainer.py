@@ -9,12 +9,12 @@ from typing import Any
 from fastapi import BackgroundTasks
 
 from app.services.task_storage import save_task_record, update_task_record_sync
-from app.services.model_storage import save_model_record
+from app.services.model_storage import save_model_record, get_model_record, update_model_record
 
 MODEL_DIR = Path("saved_models")
 MODEL_DIR.mkdir(exist_ok=True)
 
-def _heavy_fit_worker(
+def _heavy_train_worker(
     task_id: str,
     X: Any,
     y: Any,
@@ -83,16 +83,32 @@ def _heavy_fit_worker(
         )
 
         print ("Saving data to Database")
-        save_model_record(
-            model_id=model_id,
-            user_id=user_id,
-            filename=file_name,
-            model_path=str(model_path),
-            task_type=task_type,
-            column_names=column_names,
-            num_columns= len(column_names),
-            num_rows= len(X)
-        )
+        existing_model = get_model_record(model_id)
+
+        if existing_model:
+            print ("Updating with ", task_type)
+            update_model_record(
+                model_id=model_id,
+                user_id=user_id,
+                filename=file_name,
+                model_path=str(model_path),
+                task_type=task_type,
+                column_names=column_names,
+                num_columns= len(column_names),
+                num_rows= len(X)
+            )
+        else:
+            print ("Saving with ", task_type)
+            save_model_record(
+                model_id=model_id,
+                user_id=user_id,
+                filename=file_name,
+                model_path=str(model_path),
+                task_type=task_type,
+                column_names=column_names,
+                num_columns= len(column_names),
+                num_rows= len(X)
+            )
 
         print ("Done Training")
         result_payload = {
@@ -121,7 +137,7 @@ def _heavy_fit_worker(
             error=str(e)
         )
 
-async def _run_fit_background(
+async def _run_train_background(
     task_id: str,
     X: Any,
     y: Any,
@@ -132,7 +148,7 @@ async def _run_fit_background(
 ):
     try:
         await asyncio.to_thread(
-            _heavy_fit_worker,
+            _heavy_train_worker,
             task_id,
             X,
             y,
@@ -143,7 +159,7 @@ async def _run_fit_background(
         )
 
     except Exception as e:
-        print("BACKGROUND FIT ERROR : ", str(e))
+        print("BACKGROUND TRAIN ERROR : ", str(e))
         update_task_record_sync(
             task_id=task_id,
             status="failed",
@@ -168,7 +184,7 @@ async def train_model(
     )
 
     background_tasks.add_task(
-        _run_fit_background,
+        _run_train_background,
         task_id,
         X,
         y,

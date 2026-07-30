@@ -1,17 +1,17 @@
 from fastapi import APIRouter, UploadFile, File, Form, HTTPException, BackgroundTasks
 import pandas as pd
 
-from app.services.predictor import predict_model, get_predict_status
+from app.services.predictor import predict_model
 from app.services.model_id_generator import generate_model_id
 
 router = APIRouter(
-    prefix="/predict",
+    prefix="/predict-data",
     tags=["Prediction"]
 )
 
 
 @router.post("/")
-async def predict(
+async def predict_data(
     background_tasks: BackgroundTasks,
     file: UploadFile = File(...),
     user_id: str = Form(...)
@@ -41,13 +41,5 @@ async def predict(
         model_id=model_id,
         background_tasks=background_tasks
     )
-
-    return result
-
-
-@router.get("/status/{task_id}")
-async def predict_status(task_id: str):
-
-    result = await get_predict_status(task_id)
 
     return result

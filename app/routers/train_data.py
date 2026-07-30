@@ -5,13 +5,13 @@ from app.services.trainer import train_model
 from app.services.model_id_generator import generate_model_id
 
 router = APIRouter(
-    prefix="/fit",
+    prefix="/train-data",
     tags=["Training"]
 )
 
 
 @router.post("/")
-async def fit(
+async def train_data(
     background_tasks: BackgroundTasks,
     file: UploadFile = File(...),
     user_id: str = Form(...),

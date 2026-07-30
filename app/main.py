@@ -1,14 +1,15 @@
 from fastapi import FastAPI
 from fastapi.responses import HTMLResponse
-from app.routers.predict import router as predict_router
-from app.routers.fit import router as fit_router
+from app.routers.predict_data import router as predict_router
+from app.routers.train_data import router as train_router
 from app.routers.predict_proba import router as predict_proba_router
-
+from app.routers.check_status import router as check_status_router
 app = FastAPI(title="tabFM API")
 
-app.include_router(fit_router)
+app.include_router(train_router)
 app.include_router(predict_router)
 app.include_router(predict_proba_router)
+app.include_router(check_status_router)
 
 @app.get("/")
 async def root():
@@ -36,7 +37,7 @@ async def serve_client_page():
     <body>
         <h1>TabFM Interactive Client</h1>
 
-        <!-- 1. FIT CARD -->
+        <!-- 1. TRAIN CARD -->
         <div class="card">
             <h2> Training Data </h2>
             <form id="fitForm">
@@ -80,7 +81,7 @@ async def serve_client_page():
 
         <script>
             // Helper function to handle async task polling
-            async function handleTaskSubmission({ endpoint, formData, statusDiv, outputPre, statusEndpoint = '/predict/status/' }) {
+            async function handleTaskSubmission({ endpoint, formData, statusDiv, outputPre, statusEndpoint = '/predict-data/status/' }) {
                 statusDiv.innerText = "Submitting task...";
                 outputPre.innerText = "";
 
@@ -109,7 +110,7 @@ async def serve_client_page():
                             statusDiv.innerText = "Status: Failed!";
                             outputPre.innerText = JSON.stringify(statusData, null, 2);
                         } else {
-                            statusDiv.innerText = `Status: ${statusData.status}... (${statusData.message || ''})`;
+                            statusDiv.innerText = `Status: ${statusData.status}... `;
                         }
                     }, 5000);
 
@@ -127,11 +128,11 @@ async def serve_client_page():
                 formData.append('file', document.getElementById('fitCsvFile').files[0]);
 
                 handleTaskSubmission({
-                    endpoint: '/fit/',
+                    endpoint: '/train-data/',
                     formData: formData,
                     statusDiv: document.getElementById('fitStatus'),
                     outputPre: document.getElementById('fitOutput'),
-                    statusEndpoint: '/predict/status/'
+                    statusEndpoint: '/check-status/'
                 });
             });
 
@@ -143,11 +144,11 @@ async def serve_client_page():
                 formData.append('file', document.getElementById('predictCsvFile').files[0]);
 
                 handleTaskSubmission({
-                    endpoint: '/predict/',
+                    endpoint: '/predict-data/',
                     formData: formData,
                     statusDiv: document.getElementById('predictStatus'),
                     outputPre: document.getElementById('predictOutput'),
-                    statusEndpoint: '/predict/status/'
+                    statusEndpoint: '/check-status/'
                 });
             });
 
@@ -163,7 +164,7 @@ async def serve_client_page():
                     formData: formData,
                     statusDiv: document.getElementById('probaStatus'),
                     outputPre: document.getElementById('probaOutput'),
-                    statusEndpoint: '/predict/status/'
+                    statusEndpoint: '/check-status/'
                 });
             });
         </script>
